@@ -92,7 +92,7 @@
           <span class="note-count">{task.note_count}</span>
         {/if}
       </span>
-      <span class="task-date">{formatDate(task.created_at)}</span>
+      <span class="task-date">Created: {formatDate(task.created_at)} · Updated: {formatDate(task.updated_at)}</span>
     </div>
 
     <div class="controls">
@@ -163,10 +163,9 @@
   }
 
   .task-title {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
     font-size: 15px;
+    word-break: break-word;
+    white-space: normal;
   }
 
   .note-count {

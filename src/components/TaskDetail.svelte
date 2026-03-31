@@ -1,5 +1,6 @@
 <script>
   import { getNotesForTask, addNote, updateNote, deleteNote } from '$lib/db.js';
+  import { refreshTasks } from '$lib/stores.js';
 
   let { task } = $props();
   let notes = $state([]);
@@ -23,6 +24,7 @@
     await addNote(task.id, text);
     newNoteText = '';
     await loadNotes();
+    await refreshTasks();
   }
 
   function handleAddKeydown(e) {
@@ -62,6 +64,7 @@
   async function removeNote(noteId) {
     await deleteNote(noteId);
     await loadNotes();
+    await refreshTasks();
   }
 </script>
 

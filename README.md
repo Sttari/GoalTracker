@@ -8,6 +8,8 @@ A lightweight desktop sidebar app for managing tasks with priority-based ranking
 - **Multi-note system** -- Expand any task to add, edit, or delete numbered notes. Notes persist across sessions.
 - **Task lifecycle** -- Mark tasks as completed or cancelled. A collapsible bottom drawer shows archived tasks with counts.
 - **Persistent storage** -- SQLite database stores all tasks, notes, and an action log.
+- **Full title display** -- Task titles wrap to multiple lines so the full text is always visible.
+- **Timestamps** -- Each task shows both its created and last updated dates.
 - **Compact dark UI** -- Catppuccin-inspired dark theme designed for a narrow 340px sidebar. Custom titlebar with drag support.
 
 ## Tech Stack
