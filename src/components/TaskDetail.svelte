@@ -1,6 +1,36 @@
 <script>
   import { getNotesForTask, addNote, updateNote, deleteNote } from '$lib/db.js';
   import { refreshTasks } from '$lib/stores.js';
+  import { openUrl } from '@tauri-apps/plugin-opener';
+
+  const URL_REGEX = /https?:\/\/[^\s<>"'`,)}\]]+/g;
+
+  function escapeHtml(text) {
+    return text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  }
+
+  function linkify(text) {
+    let last = 0;
+    let result = '';
+    for (const match of text.matchAll(URL_REGEX)) {
+      result += escapeHtml(text.slice(last, match.index));
+      result += `<a href="${escapeHtml(match[0])}" class="note-link">${escapeHtml(match[0])}</a>`;
+      last = match.index + match[0].length;
+    }
+    result += escapeHtml(text.slice(last));
+    return result;
+  }
+
+  function handleNoteClick(e, note) {
+    const link = e.target.closest('a.note-link');
+    if (link) {
+      e.preventDefault();
+      e.stopPropagation();
+      openUrl(link.href);
+    } else {
+      startEdit(note);
+    }
+  }
 
   let { task } = $props();
   let notes = $state([]);
@@ -90,7 +120,7 @@
           {:else}
             <!-- svelte-ignore a11y_click_events_have_key_events -->
             <!-- svelte-ignore a11y_no_static_element_interactions -->
-            <span class="note-content" onclick={() => startEdit(note)}>{note.content}</span>
+            <span class="note-content" onclick={(e) => handleNoteClick(e, note)}>{@html linkify(note.content)}</span>
             <button class="note-delete" onclick={() => removeNote(note.id)} title="Delete note">✕</button>
           {/if}
         </div>
@@ -158,6 +188,16 @@
 
   .note-content:hover {
     color: var(--text-primary);
+  }
+
+  .note-content :global(a.note-link) {
+    color: var(--accent);
+    text-decoration: underline;
+    cursor: pointer;
+  }
+
+  .note-content :global(a.note-link:hover) {
+    opacity: 0.8;
   }
 
   .note-delete {
